@@ -8,7 +8,7 @@ services:
     volumes:
       - ./mongo/db:/data/db
       - ./mongo/setup.sh:/docker-entrypoint-initdb.d/setup.sh:ro
-    # restart: always
+    restart: always
     ports:
       - "27017:27017"
     environment:
@@ -16,14 +16,30 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=my_root
       - MONGO_INITDB_ROOT_PASSWORD=my_123456
     # command: sh -c "ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone"
+    networks:
+      - flask_document_system_network
   
-#   flask:
-#     build: ./flask
-#     links:
-#       - mongo
-#     ports:
-#       - "5000:5000"
-#     expose:
-#       - "5000"
-#     volumes:
-#       - ../flask_document_system:/home/web
+  flask_document_system_flask:
+    # build: ./flask
+    image: python:3.6
+    container_name: flask_document_system_flask
+    working_dir: /home/web
+    # links:
+    #   - flask_document_system_mongo
+    depends_on: 
+      - flask_document_system_mongo
+    ports:
+      - "5000:5000"
+    # expose:
+    #   - "5000"
+    volumes:
+      - ../flask_document_system:/home/web
+      - ./flask/requirements.txt:/home/web/requirements.txt
+    environment: 
+      - TZ=Asia/Shanghai
+    command: sh -c "pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple && pip3 install -r requirements.txt && gunicorn -w 4 -b 0.0.0.0:5000 run:app"
+    networks:
+      - flask_document_system_network
+  
+networks:
+  flask_document_system_network:
