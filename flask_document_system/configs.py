@@ -5,7 +5,7 @@
 
 
 app_secret_key    = 'your_secret_key'
-app_database_host = 'mongo' # if don't use docker, so this is 'localhost'
+app_database_host = 'flask_document_system_mongo' # if don't use docker, so this is 'localhost'
 app_database_name = 'docs'
 app_database_user = 'your_user'
 app_database_pwd  = 'your_pwd'
