@@ -7,15 +7,15 @@ services:
     working_dir: /usr/local/work
     volumes:
       - ./mongo/db:/data/db
-      - ./mongo/setup.sh:/docker-entrypoint-initdb.d/setup.sh
-    restart: always
+      - ./mongo/setup.sh:/docker-entrypoint-initdb.d/setup.sh:ro
+    # restart: always
     ports:
       - "27017:27017"
     environment:
       - TZ=Asia/Shanghai
       - MONGO_INITDB_ROOT_USERNAME=my_root
       - MONGO_INITDB_ROOT_PASSWORD=my_123456
-    command: bash -c "ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && chmod +x /docker-entrypoint-initdb.d/setup.sh"
+    # command: sh -c "ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone"
   
 #   flask:
 #     build: ./flask
